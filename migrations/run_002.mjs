@@ -1,8 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
 
 const supabase = createClient(
-  'https://bmxicuxhwfhobpzuuhlv.supabase.co',
-  'sb_secret_EJW0ZsND6KZevuoGqDw01A_oOead0F-'
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
 const queries = [
