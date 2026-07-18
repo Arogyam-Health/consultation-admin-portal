@@ -9,6 +9,7 @@ const allowedOrigins = [
   'http://127.0.0.1:3000',
   'http://localhost:3000',
   'https://theobesitykiller.com',
+  
 ];
 
 const corsOptions = {
@@ -44,5 +45,5 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: '/api/:path*',
+  matcher: ['/api/:path*', '/admin/api/:path*'],
 };
