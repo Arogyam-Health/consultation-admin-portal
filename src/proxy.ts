@@ -9,8 +9,18 @@ const allowedOrigins = [
   'http://127.0.0.1:3000',
   'http://localhost:3000',
   'https://theobesitykiller.com',
-  
+  'https://www.theobesitykiller.com',
+  'https://obesitykiller.myshopify.com',
 ];
+
+function isAllowedShopifyOrigin(origin: string) {
+  try {
+    const { protocol, hostname } = new URL(origin);
+    return protocol === 'https:' && hostname.endsWith('.myshopify.com');
+  } catch {
+    return false;
+  }
+}
 
 const corsOptions = {
   'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS, PATCH',
@@ -19,7 +29,7 @@ const corsOptions = {
 
 export function proxy(request: NextRequest) {
   const origin = request.headers.get('origin') ?? '';
-  const isAllowedOrigin = allowedOrigins.includes(origin);
+  const isAllowedOrigin = allowedOrigins.includes(origin) || isAllowedShopifyOrigin(origin);
 
   const isPreflight = request.method === 'OPTIONS';
 
