@@ -24,6 +24,7 @@ async function sendTemplateMessage(phone: string, templateName: string, broadcas
   };
 
   try {
+    console.log(`[WATI] Sending template "${templateName}" to ${whatsappNumber} with params:`, JSON.stringify(params));
     const response = await axios.post(
       `${config.baseUrl}/api/v1/sendTemplateMessage?whatsappNumber=${whatsappNumber}`,
       body,
@@ -32,9 +33,11 @@ async function sendTemplateMessage(phone: string, templateName: string, broadcas
           Authorization: `Bearer ${config.token}`,
           'Content-Type': 'application/json',
         },
-        timeout: 10_000,
+        timeout: 15_000,
       }
     );
+
+    console.log(`[WATI] Response for "${templateName}":`, JSON.stringify(response.data));
 
     if (response.data?.result === true) {
       console.log(`[WATI] Template "${templateName}" sent to ${phone}`);

@@ -99,12 +99,13 @@ export async function POST(req: NextRequest) {
     // Async webhook — failure does not rollback booking
     sendBookingToWebhook(booking).catch(e => console.error('[Webhook] booking send failed:', e?.message));
 
-    // Async WhatsApp confirmation — failure does not rollback booking
+    // WhatsApp confirmation failure should not rollback the booking, but in serverless
+    // we must await the attempt so the runtime does not end before WATI is called.
     const slotDate = new Date(updatedSlot.slot_date + 'T00:00:00+05:30');
     const formattedDate = slotDate.toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric', timeZone: 'Asia/Kolkata' });
     const fmt = (iso: string) => new Date(iso).toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit', hour12: true, timeZone: 'Asia/Kolkata' });
-    sendBookingConfirmation(session.phone, session.full_name, formattedDate, fmt(updatedSlot.start_time), fmt(updatedSlot.end_time))
-      .catch(e => console.error('[WATI] Booking confirmation failed:', e?.message));
+    const watiSent = await sendBookingConfirmation(session.phone, session.full_name, formattedDate, fmt(updatedSlot.start_time), fmt(updatedSlot.end_time));
+    if (!watiSent) console.error('[WATI] Booking confirmation was not sent.');
 
     return ok({
       booking_id: booking.id,

@@ -17,7 +17,7 @@ function isAllowedShopifyOrigin(origin: string) {
   if (origin === 'null') return true;
   try {
     const { protocol, hostname } = new URL(origin);
-    return protocol === 'https:' && (hostname === 'admin.shopify.com' || hostname.endsWith('.myshopify.com'));
+    return protocol === 'https:' && (hostname.endsWith('.shopify.com') || hostname.endsWith('.myshopify.com'));
   } catch {
     return false;
   }
