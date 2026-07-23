@@ -19,7 +19,7 @@ const SessionSchema = z.object({
   digestive_health: z.array(z.string()).optional(),
   medical_conditions: z.array(z.string()).optional(),
   eligibility: z.array(z.string()).optional(),
-  motivation: z.record(z.string(), z.any()).optional(),
+  motivation: z.union([z.string(), z.record(z.string(), z.any())]).optional(),
   report_generated: z.boolean().optional(),
   report_data: z.record(z.string(), z.any()).optional(),
 });
