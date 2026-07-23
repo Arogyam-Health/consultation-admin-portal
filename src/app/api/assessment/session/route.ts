@@ -51,7 +51,8 @@ export async function POST(req: NextRequest) {
 
     // Calculate BMI if height and weight are present
     if (parsed.data.height_cm && parsed.data.weight_kg) {
-      data.bmi = calculateBMI(parsed.data.weight_kg, parsed.data.height_cm);
+      const raw = calculateBMI(parsed.data.weight_kg, parsed.data.height_cm);
+      data.bmi = Math.min(raw, 99.99);
     }
 
     let result;
