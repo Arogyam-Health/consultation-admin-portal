@@ -34,7 +34,7 @@ export function conflict(message: string) {
 }
 
 export function serverError(err: unknown) {
-  const message = err instanceof Error ? err.message : String(err);
+  const message = err instanceof Error ? err.message : JSON.stringify(err);
   console.error('[API Error]', message);
   if (message === 'UNAUTHORIZED') return unauthorized();
   return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 });

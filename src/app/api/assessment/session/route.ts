@@ -9,19 +9,19 @@ const SessionSchema = z.object({
   session_token: z.string().optional(),
   phone: z.string().optional(),
   full_name: z.string().optional(),
-  age: z.number().int().min(10).max(120).optional(),
-  gender: z.string().optional(),
-  height_cm: z.number().min(50).max(300).optional(),
-  weight_kg: z.number().min(10).max(500).optional(),
-  target_weight_kg: z.number().min(10).max(500).optional(),
+  age: z.number().int().min(10).max(120).nullable().optional(),
+  gender: z.string().nullable().optional(),
+  height_cm: z.number().min(50).max(300).nullable().optional(),
+  weight_kg: z.number().min(10).max(500).nullable().optional(),
+  target_weight_kg: z.number().min(10).max(500).nullable().optional(),
   barriers: z.array(z.string()).optional(),
   lifestyle: z.array(z.string()).optional(),
   digestive_health: z.array(z.string()).optional(),
   medical_conditions: z.array(z.string()).optional(),
   eligibility: z.array(z.string()).optional(),
-  motivation: z.union([z.string(), z.record(z.string(), z.any())]).optional(),
+  motivation: z.union([z.string(), z.record(z.string(), z.any())]).nullable().optional(),
   report_generated: z.boolean().optional(),
-  report_data: z.record(z.string(), z.any()).optional(),
+  report_data: z.record(z.string(), z.any()).nullable().optional(),
 });
 
 function calculateBMI(weightKg: number, heightCm: number): number {
@@ -43,8 +43,9 @@ export async function POST(req: NextRequest) {
     ] as const;
 
     for (const f of fields) {
-      if (parsed.data[f as keyof typeof parsed.data] !== undefined) {
-        data[f] = parsed.data[f as keyof typeof parsed.data];
+      const val = parsed.data[f as keyof typeof parsed.data];
+      if (val !== undefined && val !== null) {
+        data[f] = val;
       }
     }
 
